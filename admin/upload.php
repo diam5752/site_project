@@ -18,7 +18,7 @@
 	
 	//Upload the file on the server
 	
-	$name = "uploads/{$_FILES['file']['name']}";
+	$name = "site_project/user/uploads/{$_FILES['file']['name']}";
 	$result = move_uploaded_file($_FILES['file']['tmp_name'], $name);
 	
 	//if($result){ echo "<img src='$name'/>";}
@@ -45,6 +45,6 @@
         $conn->close();
         
     }
-    header("Location: welcome.php");
+    header("Location: index.php");
 
 ?>
