@@ -1,50 +1,48 @@
 <?php
-	//Check if the file is well uploaded
-	if($_FILES['file']['error'] > 0) { echo 'Error during uploading, try again'; }
-	
-	//We won't use $_FILES['file']['type'] to check the file extension for security purpose
-	
-	//Set up valid image extensions
-	$extsAllowed = array( 'jpg', 'jpeg', 'png', 'gif' , 'mp4');
-	
-	//Extract extention from uploaded file
-		//substr return ".jpg"
-		//Strrchr return "jpg"
-		
-	$extUpload = strtolower( substr( strrchr($_FILES['file']['name'], '.') ,1) ) ;
-	//Check if the uploaded file extension is allowed
-	
-	if (in_array($extUpload, $extsAllowed) ) { 
-	
-	//Upload the file on the server
-	
-	$name = "site_project/user/uploads/{$_FILES['file']['name']}";
-	$result = move_uploaded_file($_FILES['file']['tmp_name'], $name);
-	
-	//if($result){ echo "<img src='$name'/>";}
-		
-    //} else { echo 'File is not valid. Please try again'; }
+include_once 'dbconfig.php';
+if(isset($_POST['btn-upload']))
+{
 
+	//$file = rand(1000,100000)."-".$_FILES['file']['name'];
+    $file_loc = $_FILES['file']['tmp_name'];
+	$file_size = $_FILES['file']['size'];
+	$file_type = $_FILES['file']['type'];
+	$folder="../user/uploads/";
+	
+	// new file size in KB
+	$new_size = $file_size/1024;
+	// new file size in KB
+	
+	// make file name in lower case
+	//$new_file_name = strtolower($file);
+	// make file name in lower case
+	
+	//$final_file=str_replace(' ','-',$new_file_name);
+    $final_file = $_FILES['file']['name'];
 
-        include 'mysql_config.php';
-        
-        $text = $_POST["text"];
-        echo $text; 
-        echo '<br>';
-        $title = $_POST["title"];
-        echo $title;
+    $text = $_POST["text"];
+    $title = $_POST["title"];
+    $name = "site_project/user/uploads/{$_FILES['file']['name']}";
     
-        $sql = "INSERT INTO site_pages ( text , title , image)
-             VALUES ( '$text' , '$title' , '$name' )";
-              if ($conn->query($sql) === TRUE) {
-                          echo "New record created successfully";
-                      } else {
-                          echo "Error: " . $sql . "<br>" . $conn->error;
-                      }
-        
-        $conn->close();
-        
-    }
-    header("Location: index.php");
-
+	if(move_uploaded_file($file_loc,$folder.$final_file))
+	{
+		$sql="INSERT INTO site_pages (title,text,image,file,type,size) VALUES('$title','$text', '$name', '$final_file','$file_type','$new_size')";
+		mysqli_query($mysql_conn,$sql);
+		?>
+		<script>
+		alert('successfully uploaded');
+        window.location.href='index.php?success';
+        </script>
+		<?php
+	}
+	else
+	{
+		?>
+		<script>
+		alert('error while uploading file');
+        window.location.href='index.php?fail';
+        </script>
+		<?php
+	}
+}
 ?>

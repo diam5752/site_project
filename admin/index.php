@@ -1,12 +1,5 @@
 <?php
-// Initialize the session
-session_start();
-
-// If session variable is not set it will redirect to login page
-if (!isset($_SESSION['username']) || empty($_SESSION['username'])) {
-    header("location: login.php");
-    exit;
-}
+include_once 'dbconfig.php';
 ?>
 
 <!DOCTYPE html>
@@ -23,10 +16,6 @@ if (!isset($_SESSION['username']) || empty($_SESSION['username'])) {
 
 <body>
 
-    <div class="page-header">
-        <h1>Hi, <b><?php echo htmlspecialchars($_SESSION['username']); ?></b>. Welcome to administration panel.</h1>
-    </div>
-
 
     <div class="container" >
         <div class="col-md-12 ">
@@ -36,16 +25,36 @@ if (!isset($_SESSION['username']) || empty($_SESSION['username'])) {
                     <h2 for="comment">Text:</h2>
                     <textarea class="form-control" rows="5" id="text" name="text"> </textarea>
                        <br>
-                        <label for="file"> Pick a file :  </label>
-		                <input type="file" name ="file">
-                        <input type="submit" name = "submit_title">
+                        <h2 for="file"> Pick a file :  </h2>
+		                <input type="file" name="file" />
+	                    <button type="submit" name="btn-upload">upload</button>
                 </form>
         </div>
     </div>
 
 
+    <br /><br />
+    <?php
+	if(isset($_GET['success']))
+	{
+		?>
+        <label>File Uploaded Successfully...  <a href="view.php">click here to view file.</a></label>
+        <?php
+	}
+	else if(isset($_GET['fail']))
+	{
+		?>
+        <label>Problem While File Uploading !</label>
+        <?php
+	}
+	else
+	{
+		?>
+        <label>Upload video, image ...</label>
+        <?php
+	}
+	?>
+
 
 </body>
 </html>
-
-
