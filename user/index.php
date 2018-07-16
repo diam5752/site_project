@@ -1,3 +1,27 @@
+<?php
+    //Step1
+ $db = mysqli_connect('localhost','root','','site_gen_project')
+ or die('Error connecting to MySQL server.');
+?>
+<?php
+//Step2
+$query = "SELECT * FROM site_pages  ORDER BY views DESC";
+mysqli_query($db, $query) or die('Error querying database.');
+    $result = mysqli_query($db, $query);
+    //$row = mysqli_fetch_array($result);
+    $row = mysqli_num_rows($result);
+    $a = array();
+while ($row = mysqli_fetch_array($result)) {
+    //$row;
+    array_push($a,$row);
+ //echo $row['id'] . ' ' . $row['title'] . ': ' . $row['text'] . ' ' . $row['image'] .'<br />';
+}
+ //echo $row['views'] . '<br>';
+$var = $a[4][1];
+//print_r($a[3][1] );
+//echo "<h5 class='small'> <b> $var</b> </h5>"
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +42,7 @@
         <div class="container-fluid">
             <nav class="navbar navbar-expand-md navbar-dark" style="position:relative;top:-15px;">
                 <div class="d-flex w-50 order-0">
-                    <a class="navbar-brand mr-1" href="#" style="position:relative;top:-15px;left:17px; "> <img src="icons/logo.png"></a>
+                    <a class="navbar-brand mr-1" href="#" style="position:relative;top:-15px;left:17px; "> <img src="uploadsf/logo.png"></a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -49,7 +73,7 @@
             </nav>
 
             <div>
-                <img src="icons/videoblog.png" class="mx-auto d-block" style="position: relative;bottom:-50px;">
+                <img src="uploads/videoblog.png" class="mx-auto d-block" style="position: relative;bottom:-50px;">
                 <h4 class="text-center text-white" style="font-size:14px;position: relative;bottom:-55px;" >LE NEWS SUL MONDO DEL MATRIMONIO</h4>
             </div>
         </div>
@@ -58,7 +82,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-1">
-                <img src="icons/monda_sposa.png">
+                <img src="uploads/monda_sposa.png">
             </div>
             <div class="col-sm-11">
                 <div class="form-group">
@@ -81,18 +105,31 @@
     <div class="row">
         <div class="col-sm-2"> </div>
         <div class="col-sm-5" style="margin-right:30px;">
-            <h2>RED CARPET INSPIRATION</h2>
-            <br>
-            <img class="img-fluid" src="icons/redcarpet.png">
-            <p> <br> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-            </p>
 
-            <img src="icons/line.png">
+           <?php
+            if(isset($_GET['chooser']) && !empty($_GET['chooser'])){
+                $chooser =  $_GET['chooser'];
+            } else {
+                $chooser = 0;
+            }
+
+            $var_title = $a[$chooser][1];
+            $var_video = $a[$chooser][3];
+            $var_text = $a[$chooser][2];
+            echo "  <h2>$var_title </h2> ";
+            echo "<br>
+            <video style='width: 100%; height: auto;' controls>
+                        <source src='/site_project/user/$var_video' type='video/mp4'> </video>";
+            echo " <br> <p> $var_text </p>";
+
+            ?>
+
+            <img src="uploads/line.png">
             <span class="text-right  small text-muted"> CONDIVIDI QUESTO ARTICOLO</span>
-            <img style="float: right; margin: 0px 0px 15px 15px;" src="icons/pinterest_icon.png">
-            <img style="float: right; margin: 0px 0px 15px 15px;" src="icons/tweeter_icon.png">
-            <img style="float: right; margin: 0px 0px 15px 15px;" src="icons/google_icon.png">
-            <img style="float: right; margin: 0px 0px 15px 15px;" src="icons/facebook_icon.png">
+            <img style="float: right; margin: 0px 0px 15px 15px;" src="uploads/pinterest_icon.png">
+            <img style="float: right; margin: 0px 0px 15px 15px;" src="uploads/tweeter_icon.png">
+            <img style="float: right; margin: 0px 0px 15px 15px;" src="uploads/google_icon.png">
+            <img style="float: right; margin: 0px 0px 15px 15px;" src="uploads/facebook_icon.png">
 
         </div>
 
@@ -103,19 +140,37 @@
 
             <div class="row">
                 <div class="col-sm-3">
-                    <img src="icons/camera_example_icon.png" style="height:72px;width=:85px;">
+                    <?php
+                    $var2 = $a[0][3];
+                    echo " <video  preload='metadata' height='72' width='85'>
+                        <source src='/site_project/user/$var2' type='video/mp4'> </video> "
+                    ?>
                 </div>
                 <div class="col-sm-4"> <br>
-                    <h6 class="small"><b> LE INTERVISTE AI PROTAGONISTI... </b> </h6>
+            <?php
+                    $var = $a[0][1];
+
+                    echo " <a  class='text-dark' href='http://localhost/site_project/user/test.php?chooser=0'>
+                                <h5 class='small'> <b> $var</b> </h5> </a>";
+             ?>
                 </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-sm-3">
-                    <img src="icons/girlsShoping_example_icons.png" style="height:72px;width=:85px;">
+                   <?php
+                    $var2 = $a[1][3];
+                    echo " <video  preload='metadata' height='72' width='85'>
+                        <source src='/site_project/user/$var2' type='video/mp4'> </video> "
+                    ?>
                 </div>
                 <div class="col-sm-4"> <br>
-                    <h6 class="small"><b> LE INTERVISTE AI PROTAGONISTI... </b> </h6>
+
+                   <?php
+                    $var = $a[1][1];
+                    echo " <a  class='text-dark' href='http://localhost/site_project/user/test.php?chooser=1'>
+                                <h5 class='small'> <b> $var</b> </h5> </a>";
+                    ?>
                 </div>
                 <br>
             </div>
@@ -123,10 +178,18 @@
             <br>
             <div class="row">
                 <div class="col-sm-3">
-                    <img src="icons/food_example_icon.png">
+                   <?php
+                    $var2 = $a[2][3];
+                    echo " <video  preload='metadata' height='72' width='85'>
+                        <source src='/site_project/user/$var2' type='video/mp4'> </video> "
+                    ?>
                 </div>
                 <div class="col-sm-4"> <br>
-                    <h6 class="small"><b> LE INTERVISTE AI PROTAGONISTI... </b> </h6>
+                   <?php
+                    $var = $a[2][1];
+                    echo " <a  class='text-dark' href='http://localhost/site_project/user/test.php?chooser=2'>
+                                <h5 class='small'> <b> $var</b> </h5> </a>";
+                    ?>
                 </div>
                 <br>
             </div>
@@ -154,7 +217,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-1">
-                    <img src="icons/video_corellati_icon.png">
+                    <img src="uploads/video_corellati_icon.png">
                 </div>
             </div>
             <br>
@@ -166,11 +229,11 @@
         <div class="row">
             <div class="col-sm-2"> </div>
             <div class="col-sm-2">
-                <img src="icons/thumbnail_example.png" class="img-thumbnail">
+                <img src="uploads/thumbnail_example.png" class="img-thumbnail">
                 <p> SUMMER FASHION 2018</p>
             </div>
             <div class="col-sm-2">
-                <img src="icons/bag_example_icon.png" class="img-thumbnail">
+                <img src="uploads/bag_example_icon.png" class="img-thumbnail">
                 <p> BAGS SPECIAL</p>
             </div>
         </div>
@@ -185,15 +248,15 @@
 
         <div class="row">
         <div class="col-sm-2">
-                <img src="icons/miasposa_white_icon.png" class="img-responsive">
+                <img src="uploads/miasposa_white_icon.png" class="img-responsive">
         </div>
         <div class="col-sm-2"> </div>
             <div class="col-sm-4">
-                <img src="icons/pink_logo_icon2.png" style="">
-                <img src="icons/si_logo_icon.png">
+                <img src="uploads/pink_logo_icon2.png" style="">
+                <img src="uploads/si_logo_icon.png">
             </div>
             <div class="col-sm-4 ">
-                <img src="icons/info_icons.png" class="float-right">
+                <img src="uploads/info_uploads.png" class="float-right">
             </div>
         </div>
         <br>
